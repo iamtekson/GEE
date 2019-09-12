@@ -1,0 +1,23 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var studyArea = /* color: #d63000 */ee.Geometry.Polygon(
+        [[[82.21155766265156, 28.714316702143485],
+          [81.71717289702656, 27.804703981705426],
+          [82.79383305327656, 26.701083964729815],
+          [87.40809086577656, 26.258566047903376],
+          [87.28724125640156, 27.36652258497033],
+          [85.62830570952656, 28.75285078683848],
+          [82.62903813140156, 28.83950048740761]]]),
+    l8 = ee.ImageCollection("LANDSAT/LC08/C01/T1_RT");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+l8.size()
+Map.addLayer(l8)
+var f1 = l8.filterDate('2018-01-01', '2018-12-01')
+f1.size()
+var f2 = f1.filterMetadata('CLOUD_COVER', 'less_than', 10)
+f2.size()
+Map.addLayer(f2)
+var f3 = f2.filterBounds(studyArea)
+f3.size()
+var f4 = f3.median()
+
+Map.addLayer(f4, {bands:['B7', 'B6', 'B4'], max:0.3}, "False_Color")
