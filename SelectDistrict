@@ -1,0 +1,8 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var landsat = ee.ImageCollection("LANDSAT/LE07/C01/T1_RT");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+var countries = ee.FeatureCollection('ft:1tdSwUL7MVpOauSgRzqVTOwdfy17KDbw-1d9omPw'); 
+var country_name = ['Nepal'];
+var country = countries.filter(ee.Filter.inList('Country', country_name)); 
+Map.centerObject(country, 7);
+Map.addLayer(country);
