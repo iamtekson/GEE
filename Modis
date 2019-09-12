@@ -1,0 +1,8 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var imageCollection = ee.ImageCollection("MODIS/006/MCD12Q2");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+var modis = ee.Image('MODIS/006/MCD12Q1/2016_01_01').select('LC_Type1');
+var blank = ee.Image(0);
+var forest = blank.where(modis.lte(5), 1);
+var finalForest = forest.updateMask(forest);
+Map.addLayer(finalForest, {palette:'228b22'}, 'Forest Area 2016')
