@@ -1,0 +1,18 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var l8 = ee.ImageCollection("LANDSAT/LC08/C01/T1_RT");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+var f1 = l8.filterDate('2019-05-10', '2019-07-10').filterMetadata('CLOUD_COVER', 'less_than', 10).median()
+
+// declear variable containing required band
+var nir = f1.select(['B5'])
+var red = f1.select(['B4'])
+
+// function for NDVI
+  var ndvi = nir.subtract(red).divide(nir.add(red)).rename('NDVI')
+
+// display result
+var ndviParams = {min:-1, max:1, palette:['blue', 'white', 'green']}
+Map.addLayer(ndvi, ndviParams, 'NDVI Layer')
+
+// direct function
+// ndvi = f1.normalizedDifference(['b5', 'b4']).rename('NDVI')
