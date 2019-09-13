@@ -1,0 +1,16 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var l7 = ee.ImageCollection("LANDSAT/LE07/C01/T1_RT"),
+    pokhara = /* color: #d63000 */ee.Geometry.Point([84.02940272382807, 28.212222328191164]),
+    l8 = ee.ImageCollection("LANDSAT/LC08/C01/T1_RT");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+var image = ee.Image((l8)
+            .filterDate('2019-01-01', '2019-09-11')
+            .filterBounds(pokhara)
+            .select('B[1-7]')
+            .sort('CLOUD_COVER')
+            .first())
+print(image)
+
+Map.addLayer(image, {}, "landsat 8 image")
+Map.addLayer(image, {bands: ['B4', 'B3', 'B2'], max: 0.5, gamma: 2}, "Landsat 8")
+Map.centerObject(pokhara, 7)
