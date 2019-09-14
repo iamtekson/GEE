@@ -1,0 +1,32 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var l8 = ee.ImageCollection("LANDSAT/LC08/C01/T1_TOA"),
+    pokhara = ee.FeatureCollection("users/teksondada/pokhara");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+//image acquisition using first date filter
+var image = l8.filterDate('2018-01-01', '2018-02-01').filterBounds(pokhara).sort('date').first()
+print(image)
+//Map.addLayer(image)
+
+//fix center of the map
+Map.centerObject(pokhara, 10)
+Map.addLayer(pokhara, {}, 'Pokhara')
+
+//NDVI calculate
+var NDVI = image.normalizedDifference(['B5', 'B4']);
+var landsat = NDVI.clip(pokhara)
+Map.addLayer(landsat, {palette:['FFFFFF', 'CE7E45', 'DF923D', 'F1B555', 'FCD163', '99B718',
+               '74A901', '66A000', '529400', '3E8601', '207401', '056201',
+               '004C00', '023B01', '012E01', '011D01', '011301']}, "NDVI")
+               
+
+//export work
+Export.image.toDrive({
+    image: landsat,
+    description: 'NDVI',
+    scale: 30,
+    region: pokhara,
+    fileFormat: 'GeoTiff',
+    formatOptions:{
+      cloudOptimized: true
+    }
+  })
