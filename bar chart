@@ -1,0 +1,22 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var pokhara = ee.FeatureCollection("users/teksondada/pokhara");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+var s1 = ee.ImageCollection('COPERNICUS/S1_GRD');
+
+var collection = s1.filterDate('2018-01-01', '2018-12-31').filterBounds(pokhara)
+
+print(collection)
+
+collection = collection.filter(ee.Filter.eq('orbitProperties_pass', 'ASCENDING'));
+
+function createChart(band){
+  var img = collection.select(band)
+  var chart = ui.Chart.image.series(img, pokhara, ee.Reducer.mean(), 10)
+  return chart
+}
+
+var chartVV = createChart('VV')
+print(chartVV)
+
+var chartVH = createChart('VH')
+print(chartVH)
