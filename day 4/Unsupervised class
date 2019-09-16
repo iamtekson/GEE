@@ -1,0 +1,43 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var pokhara = ee.FeatureCollection("users/teksondada/pokhara");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+var l8 = ee.Image('LANDSAT/LE7_TOA_1YEAR/2001')
+
+// Add the pokhara layer to the map
+Map.centerObject(pokhara, 10)
+Map.addLayer(ee.Image().paint({
+  featureCollection: pokhara,
+  color: 0,
+  width: 2
+}), {}, 'Pokhara')
+
+//Take some sample of data to be train
+var training = l8.sample({
+  region: pokhara,
+  scale: 30,
+  numPixels: 5000
+})
+
+//Cluster these data and train it
+var clusterer = ee.Clusterer.wekaKMeans(5).train(training)
+
+//Result value
+var result = l8.cluster(clusterer)
+var finalResult = result.randomVisualizer().clip(pokhara)
+print(finalResult)
+
+//Classify these classes into required class
+/*var water = finalResult.select(0)
+var settlement = finalResult.select(1)
+var vegetation = finalResult.select(2)
+var cultivation = finalResult.select(3)
+var all = [water, settlement, vegetation, cultivation]
+var fimage = ee.Image(all)
+print(water, 'water')
+*/
+//Display the result in map
+/*Map.addLayer(water, {color:'blue', min: 200, max: 255}, 'water')
+Map.addLayer(settlement, {color: 'red', min: 200, max: 255}, 'settlement')
+Map.addLayer(vegetation, {color: 'green', min: 200, max: 255}, 'vegetation')*/
+
+Map.addLayer(finalResult, {}, 'Cluster')
